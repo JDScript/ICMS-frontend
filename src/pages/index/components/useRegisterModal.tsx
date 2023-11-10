@@ -131,6 +131,7 @@ const useRegisterModal = () => {
               id="cameraCanvas"
               ref={videoRef}
               style={{ borderRadius: "50%", width: "100%" }}
+              playsInline
             />
           </Avatar>
 
