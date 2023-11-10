@@ -39,4 +39,31 @@ declare namespace API {
     Descriptor: number[];
     Shapes: { X: number; Y: number }[];
   }
+
+  interface Course {
+    id: number;
+    code: string;
+    year: number;
+    section: string;
+    title: string;
+    instructor: string;
+    summary: string;
+    zoom_link: string;
+    slots: {
+      day: number;
+      venue: string;
+      start_time: string;
+      end_time: string;
+      start_date: string;
+      end_date: string;
+      remark: string;
+    }[];
+    created_at: number;
+    updated_at: number;
+  }
+
+  interface Enrolment {
+    course_id: number;
+    course: API.Course;
+  }
 }

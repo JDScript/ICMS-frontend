@@ -5,6 +5,8 @@ import GlobalLayout from "./layouts/global";
 import "./global.css";
 import { UserProvider } from "./contexts/user";
 import AuthWrapper from "./wrappers/auth";
+import { ConfigProvider } from "@douyinfe/semi-ui";
+import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 
 // Pages Import
 const IndexPage = lazy(async () => await import("@/pages/index"));
@@ -31,6 +33,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <UserProvider>
-    <RouterProvider router={router} />
+    <ConfigProvider locale={en_US}>
+      <RouterProvider router={router} />
+    </ConfigProvider>
   </UserProvider>
 );

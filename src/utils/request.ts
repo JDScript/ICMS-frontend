@@ -16,7 +16,12 @@ const request = axios.create({
 const authHeader = async (config: InternalAxiosRequestConfig) => {
   const token = window.localStorage.getItem("token");
   if (token) {
-    config.headers.setAuthorization(`Bearer ${JSON.parse(token)}`);
+    try {
+      config.headers.setAuthorization(`Bearer ${JSON.parse(token)}`);
+    } catch {
+      localStorage.removeItem("token");
+      window.dispatchEvent(new StorageEvent("storage", { key: "token" }));
+    }
   }
   return config;
 };
@@ -27,6 +32,11 @@ const extractData = async (resp: AxiosResponse) => {
 
 const formatError = async (err: AxiosError) => {
   const { response } = err;
+
+  if (response?.status === 401) {
+    localStorage.removeItem("token");
+    window.dispatchEvent(new StorageEvent("storage", { key: "token" }));
+  }
 
   if (
     response &&

@@ -36,6 +36,18 @@ class MainService {
   static me = async (): Promise<API.BaseResponse<API.User>> => {
     return request("/me");
   };
+
+  static getCourses = async (
+    params: API.PaginationParams & { search?: string }
+  ): Promise<API.BaseResponse<API.BasePagination<API.Course>>> => {
+    return request("/courses", { params });
+  };
+
+  static getEnrolments = async (): Promise<
+    API.BaseResponse<API.Enrolment[]>
+  > => {
+    return request("/me/enrolments");
+  };
 }
 
 export default MainService;
