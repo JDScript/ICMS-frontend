@@ -50,7 +50,7 @@ const CoursesPage = () => {
         renderItem={(course) => (
           <div>
             <Typography.Title heading={5}>
-              {course.code} - {course.title}
+              {course.code} - {course.title} [Section {course.section}, {course.year}]
             </Typography.Title>
             <Space vertical align="start">
               <Typography.Paragraph>

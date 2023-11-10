@@ -8,6 +8,7 @@ import {
   Typography,
 } from "@douyinfe/semi-ui";
 import dayjs from "dayjs";
+import CourseCalendar from "./components/CourseCalendar";
 
 const DashboardPage = () => {
   const { user, enrolments } = useUser();
@@ -21,6 +22,7 @@ const DashboardPage = () => {
           ? dayjs(user.last_login_at * 1000).format(" YYYY-MM-DD HH:mm:ss")
           : " Never"}
       </Typography.Text>
+      <CourseCalendar />
       <Card title="Upcoming Session" style={{ marginBlock: 16 }}></Card>
       <Card title="My Enrolments" style={{ marginBlock: 16 }}>
         <List
@@ -31,7 +33,8 @@ const DashboardPage = () => {
               main={
                 <div>
                   <Typography.Title heading={5}>
-                    {course.code} - {course.title}
+                    {course.code} - {course.title} [Section {course.section},{" "}
+                    {course.year}]
                   </Typography.Title>
                   <Space vertical align="start">
                     <Typography.Paragraph>
