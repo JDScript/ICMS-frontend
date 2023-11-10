@@ -15,12 +15,13 @@ import {
   Typography,
 } from "@douyinfe/semi-ui";
 import { Suspense, useEffect, useState } from "react";
-import { useOutlet } from "react-router-dom";
+import { useOutlet, useNavigate } from "react-router-dom";
 
 const GlobalLayout = () => {
   const [dark, setDark] = useState(false);
   const outlet = useOutlet();
   const { token, user, logout } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setDark(document.body.hasAttribute("theme-mode"));
@@ -64,11 +65,21 @@ const GlobalLayout = () => {
         <Nav
           mode="horizontal"
           header={{
-            text: "ICMS",
+            text: (
+              <Typography.Text
+                link
+                onClick={() => navigate("/dashboard")}
+                strong
+                style={{ fontSize: 24 }}
+              >
+                ICMS
+              </Typography.Text>
+            ),
           }}
           items={[
             {
               text: "All Courses",
+              onClick: () => navigate("/courses"),
             },
           ]}
           footer={

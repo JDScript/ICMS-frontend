@@ -9,17 +9,21 @@ import AuthWrapper from "./wrappers/auth";
 // Pages Import
 const IndexPage = lazy(async () => await import("@/pages/index"));
 const DashboardPage = lazy(async () => await import("@/pages/dashboard"));
+const CoursesPage = lazy(async () => await import("@/pages/courses"));
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <GlobalLayout />,
     children: [
-      { path: "", element: <IndexPage /> },
+      { path: "/", element: <IndexPage /> },
       {
         path: "/",
         element: <AuthWrapper />,
-        children: [{ path: "/dashboard", element: <DashboardPage /> }],
+        children: [
+          { path: "/dashboard", element: <DashboardPage /> },
+          { path: "/courses", element: <CoursesPage /> },
+        ],
       },
     ],
   },
