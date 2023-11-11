@@ -22,7 +22,7 @@ const DashboardPage = () => {
           ? dayjs(user.last_login_at * 1000).format(" YYYY-MM-DD HH:mm:ss")
           : " Never"}
       </Typography.Text>
-      <CourseCalendar />
+      <CourseCalendar mode="day"/>
       <Card title="Upcoming Session" style={{ marginBlock: 16 }}></Card>
       <Card title="My Enrolments" style={{ marginBlock: 16 }}>
         <List

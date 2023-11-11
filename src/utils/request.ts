@@ -6,7 +6,7 @@ import axios, {
 } from "axios";
 
 const request = axios.create({
-  baseURL: "https://icms.jdscript.dev/v1",
+  baseURL: "http://localhost:10001/v1",
   responseType: "json",
   responseEncoding: "utf-8",
   timeout: 100000,

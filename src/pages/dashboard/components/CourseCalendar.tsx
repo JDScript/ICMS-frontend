@@ -1,4 +1,5 @@
 import { useUser } from "@/contexts/user";
+import { IconArrowLeft, IconArrowRight } from "@douyinfe/semi-icons";
 import {
   Button,
   ButtonGroup,
@@ -10,87 +11,121 @@ import type { EventObject } from "@douyinfe/semi-ui/lib/es/calendar";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 
-const CourseCalendar = () => {
+interface CourseCalendarProps {
+  mode?: "day" | "month" | "week";
+}
+
+const CourseCalendar = (props: CourseCalendarProps) => {
+  const { mode = "week" } = props;
+
   const [anchorDate, setAnchorDate] = useState(dayjs());
 
-  const startOfWeek = useMemo(() => anchorDate.startOf("week"), [anchorDate]);
-  const endOfWeek = useMemo(() => anchorDate.endOf("week"), [anchorDate]);
+  const startOfCalendar = useMemo(
+    () => anchorDate.startOf(mode).add(-1, mode),
+    [anchorDate, mode]
+  );
+  const endOfCalendar = useMemo(
+    () => anchorDate.endOf(mode).add(1, mode),
+    [anchorDate, mode]
+  );
 
   const { enrolments } = useUser();
 
   const events = useMemo(() => {
     const evs: EventObject[] = [];
     for (const { course } of enrolments) {
-      const ev = course.slots
-        .filter((slot) => {
-          return (
-            dayjs(slot.start_date).isBefore(endOfWeek) &&
-            dayjs(slot.end_date).isAfter(startOfWeek)
-          );
-        })
-        .map((slot) => ({
-          key: course.id + slot.start_date,
-          allDay: false,
-          start: dayjs(
-            `${startOfWeek.add(slot.day, "day").format("YYYY-MM-DD")} ${
-              slot.start_time
-            }`
-          ).toDate(),
-          end: dayjs(
-            `${startOfWeek.add(slot.day, "day").format("YYYY-MM-DD")} ${
-              slot.end_time
-            }`
-          ).toDate(),
-          children: (
-            <div
-              style={{
-                borderRadius: 8,
-                boxSizing: "border-box",
-                border: "var(--semi-color-primary) 1px solid",
-                paddingBlock: 4,
-                paddingInline: 8,
-                backgroundColor: "var(--semi-color-primary-light-default)",
-                height: "100%",
-                overflow: "hidden",
-              }}
-            >
-              <Typography.Text style={{ margin: -1 }}>
-                {course.code} - {course.section}
-                <br />
-                <Typography.Text
-                  style={{ fontSize: 11, color: "var(--semi-color-text-2)" }}
+      const filteredSlots = course.slots.filter((slot) => {
+        return (
+          !dayjs(slot.end_date).isBefore(startOfCalendar) &&
+          !dayjs(slot.start_date).isAfter(endOfCalendar)
+        );
+      });
+
+      for (const slot of filteredSlots) {
+        let date = dayjs(slot.start_date);
+        const endDate = dayjs(slot.end_date).endOf("day");
+        while (date.isBefore(endOfCalendar) && date.isBefore(endDate)) {
+          if (date.isSame(startOfCalendar) || date.isAfter(startOfCalendar)) {
+            const today = date.format("YYYY-MM-DDT");
+            evs.push({
+              key: `${course.code}_${course.section}-${today}-${slot.start_time}-${slot.end_time}`,
+              start: dayjs(today + slot.start_time).toDate(),
+              end: dayjs(today + slot.end_time).toDate(),
+              allDay: false,
+              children: (
+                <div
+                  style={{
+                    borderRadius: 8,
+                    boxSizing: "border-box",
+                    border: "var(--semi-color-primary) 1px solid",
+                    paddingBlock: 4,
+                    paddingInline: 8,
+                    backgroundColor: "var(--semi-color-primary-light-default)",
+                    height: "100%",
+                    overflow: "hidden",
+                  }}
                 >
-                  {slot.venue}
-                </Typography.Text>
-              </Typography.Text>
-            </div>
-          ),
-        }));
-      evs.push(...ev);
-      console.log(evs);
+                  <Typography.Text style={{ margin: -1 }}>
+                    {course.code} - {course.section}
+                    <br />
+                    <Typography.Text
+                      style={{
+                        fontSize: 11,
+                        color: "var(--semi-color-text-2)",
+                      }}
+                    >
+                      {slot.venue}
+                    </Typography.Text>
+                  </Typography.Text>
+                </div>
+              ),
+            });
+          }
+          date = date.add(1, "week");
+        }
+      }
     }
     return evs;
-  }, [startOfWeek, endOfWeek, enrolments]);
+  }, [startOfCalendar, endOfCalendar, enrolments]);
 
   return (
-    <div style={{ width: "calc(100vw - 48px)", marginBlock: 12 }}>
-      <Space style={{ width: "100%", justifyContent: "space-between" }}>
-        <Button onClick={() => setAnchorDate(dayjs())}>Today</Button>
+    <div
+      style={{
+        width: "100%",
+        overflow: "auto",
+        display: "grid",
+        marginBlock: 12,
+      }}
+    >
+      <Space
+        style={{
+          width: "100%",
+          justifyContent: "space-between",
+          marginBlockEnd: 12,
+        }}
+      >
+        <Typography.Text strong style={{ color: "var(--semi-color-text-2)" }}>
+          {anchorDate.format("MMM D, YYYY")}
+        </Typography.Text>
         <ButtonGroup>
-          <Button onClick={() => setAnchorDate((prev) => prev.add(-1, "week"))}>
-            Previous Week
-          </Button>
-          <Button onClick={() => setAnchorDate((prev) => prev.add(1, "week"))}>
-            Next Week
-          </Button>
+          <Button onClick={() => setAnchorDate(dayjs())}>Today</Button>
+          <Button
+            onClick={() => setAnchorDate((prev) => prev.add(-1, mode))}
+            icon={<IconArrowLeft />}
+          />
+          <Button
+            onClick={() => setAnchorDate((prev) => prev.add(1, mode))}
+            icon={<IconArrowRight />}
+          />
         </ButtonGroup>
       </Space>
       <Calendar
-        mode="week"
-        style={{ borderRadius: 8, marginBlock: 12 }}
+        mode={mode}
+        style={{ borderRadius: 8, width: "100%" }}
         events={events}
         markWeekend
         displayValue={anchorDate.toDate()}
+        showCurrTime={dayjs().startOf("day").isSame(anchorDate.startOf("day"))}
       />
     </div>
   );

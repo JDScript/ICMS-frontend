@@ -50,7 +50,8 @@ const CoursesPage = () => {
         renderItem={(course) => (
           <div>
             <Typography.Title heading={5}>
-              {course.code} - {course.title} [Section {course.section}, {course.year}]
+              {course.code} - {course.title} [Section {course.section},{" "}
+              {course.year}]
             </Typography.Title>
             <Space vertical align="start">
               <Typography.Paragraph>
@@ -59,9 +60,16 @@ const CoursesPage = () => {
               <Typography.Paragraph>
                 Instructor: {course.instructor}
               </Typography.Paragraph>
-              <Button theme="solid" disabled={enrolledInCourse(course.id)}>
-                Enrol
-              </Button>
+              <Space>
+                <Button theme="solid" disabled={enrolledInCourse(course.id)}>
+                  Enrol
+                </Button>
+                {enrolledInCourse(course.id) && (
+                  <Typography.Text strong type="danger">
+                    You already enrolled in this course!
+                  </Typography.Text>
+                )}
+              </Space>
             </Space>
           </div>
         )}
