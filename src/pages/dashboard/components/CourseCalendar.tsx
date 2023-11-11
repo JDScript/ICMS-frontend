@@ -126,6 +126,7 @@ const CourseCalendar = (props: CourseCalendarProps) => {
         markWeekend
         displayValue={anchorDate.toDate()}
         showCurrTime={dayjs().startOf("day").isSame(anchorDate.startOf("day"))}
+        scrollTop={500}
       />
     </div>
   );
