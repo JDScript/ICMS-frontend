@@ -78,4 +78,27 @@ declare namespace API {
     created_at: number;
     updated_at: number;
   }
+
+  interface CourseSection {
+    id: number;
+    course_id: number;
+    name: string;
+    summary: string;
+    modules: {
+      id: number;
+      course_id: number;
+      section_id: number;
+      name: string;
+      module_type: string;
+      indent: number;
+      link: string;
+      extra: any;
+      order: number;
+      created_at: number;
+      updated_at: number;
+    }[];
+    order: number;
+    created_at: number;
+    updated_at: number;
+  }
 }

@@ -2,6 +2,7 @@ import { useUser } from "@/contexts/user";
 import MainService from "@/service";
 import { Button, List, Popconfirm, Space, Typography } from "@douyinfe/semi-ui";
 import { useRequest } from "ahooks";
+import { useNavigate } from "react-router-dom";
 
 const CourseListItem = ({
   course,
@@ -20,6 +21,8 @@ const CourseListItem = ({
       },
     }
   );
+
+  const navigate = useNavigate();
 
   return (
     <List.Item style={{ paddingInline: 0 }}>
@@ -58,7 +61,11 @@ const CourseListItem = ({
                 )}
               </>
             ) : (
-              <Button theme="solid" disabled={!enrolledInCourse(course.id)}>
+              <Button
+                theme="solid"
+                disabled={!enrolledInCourse(course.id)}
+                onClick={() => navigate(`/courses/${course.id}`)}
+              >
                 Enter course
               </Button>
             )}

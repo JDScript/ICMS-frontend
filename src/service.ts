@@ -60,6 +60,18 @@ class MainService {
   ): Promise<API.BaseResponse<API.BasePagination<API.Activity>>> => {
     return request("/me/activities", { params });
   };
+
+  static getCourseDetail = async (
+    course_id: number
+  ): Promise<API.BaseResponse<API.Course>> => {
+    return request(`/courses/${course_id}`);
+  };
+
+  static getCourseSections = async (
+    course_id: number
+  ): Promise<API.BaseResponse<API.CourseSection[]>> => {
+    return request(`/courses/${course_id}/sections`);
+  };
 }
 
 export default MainService;

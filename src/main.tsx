@@ -12,6 +12,9 @@ import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
 const IndexPage = lazy(async () => await import("@/pages/index"));
 const DashboardPage = lazy(async () => await import("@/pages/dashboard"));
 const CoursesPage = lazy(async () => await import("@/pages/courses"));
+const CourseDetailPage = lazy(
+  async () => await import("@/pages/courses/$course_id")
+);
 const ActivitiesPage = lazy(async () => await import("@/pages/activities"));
 
 const router = createBrowserRouter([
@@ -26,6 +29,10 @@ const router = createBrowserRouter([
         children: [
           { path: "/dashboard", element: <DashboardPage /> },
           { path: "/courses", element: <CoursesPage /> },
+          {
+            path: "/courses/:course_id",
+            element: <CourseDetailPage />,
+          },
           { path: "/activities", element: <ActivitiesPage /> },
         ],
       },
