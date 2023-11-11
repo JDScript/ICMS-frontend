@@ -48,6 +48,12 @@ class MainService {
   > => {
     return request("/me/enrolments");
   };
+
+  static enrolInCourse = async (data: {
+    course_id: number;
+  }): Promise<API.BaseResponse<Partial<API.Enrolment>>> => {
+    return request("/me/enrolments", { method: "post", data });
+  };
 }
 
 export default MainService;

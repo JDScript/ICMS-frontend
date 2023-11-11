@@ -1,16 +1,8 @@
-import { useUser } from "@/contexts/user";
+import CourseListItem from "@/components/CourseListItem";
 import MainService from "@/service";
 import { extractData } from "@/utils/extractData";
 import { IconSearch } from "@douyinfe/semi-icons";
-import {
-  Button,
-  Input,
-  Layout,
-  List,
-  Pagination,
-  Space,
-  Typography,
-} from "@douyinfe/semi-ui";
+import { Input, Layout, List, Pagination } from "@douyinfe/semi-ui";
 import { usePagination } from "ahooks";
 import { useState } from "react";
 
@@ -31,7 +23,6 @@ const CoursesPage = () => {
       debounceWait: 500,
     }
   );
-  const { enrolledInCourse } = useUser();
 
   return (
     <Layout.Content
@@ -46,32 +37,9 @@ const CoursesPage = () => {
       <List
         loading={loading}
         dataSource={data?.list}
-        style={{ paddingBlock: 12, flex: 1 }}
+        style={{ flex: 1 }}
         renderItem={(course) => (
-          <div>
-            <Typography.Title heading={5}>
-              {course.code} - {course.title} [Section {course.section},{" "}
-              {course.year}]
-            </Typography.Title>
-            <Space vertical align="start">
-              <Typography.Paragraph>
-                {course.summary ? course.summary : "No summary provided"}
-              </Typography.Paragraph>
-              <Typography.Paragraph>
-                Instructor: {course.instructor}
-              </Typography.Paragraph>
-              <Space>
-                <Button theme="solid" disabled={enrolledInCourse(course.id)}>
-                  Enrol
-                </Button>
-                {enrolledInCourse(course.id) && (
-                  <Typography.Text strong type="danger">
-                    You already enrolled in this course!
-                  </Typography.Text>
-                )}
-              </Space>
-            </Space>
-          </div>
+          <CourseListItem course={course} key={course.id} showEnrol />
         )}
       />
       <Pagination {...pagination} style={{ alignSelf: "flex-end" }} />

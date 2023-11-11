@@ -1,16 +1,8 @@
 import { useUser } from "@/contexts/user";
-import {
-  Button,
-  Card,
-  Col,
-  Layout,
-  List,
-  Row,
-  Space,
-  Typography,
-} from "@douyinfe/semi-ui";
+import { Card, Col, Layout, List, Row, Typography } from "@douyinfe/semi-ui";
 import dayjs from "dayjs";
 import CourseCalendar from "./components/CourseCalendar";
+import CourseListItem from "@/components/CourseListItem";
 
 const DashboardPage = () => {
   const { user, enrolments } = useUser();
@@ -29,32 +21,15 @@ const DashboardPage = () => {
           <Card title="Upcoming Session" style={{ marginBlock: 16 }}>
             No upcoming session within 1 hour.
           </Card>
-          <Card title="My Enrolments" style={{ marginBlock: 16 }}>
+          <Card
+            title="My Enrolments"
+            style={{ marginBlock: 16 }}
+            bodyStyle={{ paddingBlock: 4 }}
+          >
             <List
               dataSource={enrolments}
               renderItem={({ course }) => (
-                <List.Item
-                  style={{ padding: 0 }}
-                  main={
-                    <div>
-                      <Typography.Title heading={5}>
-                        {course.code} - {course.title} [Section {course.section}
-                        , {course.year}]
-                      </Typography.Title>
-                      <Space vertical align="start">
-                        <Typography.Paragraph>
-                          {course.summary
-                            ? course.summary
-                            : "No summary provided"}
-                        </Typography.Paragraph>
-                        <Typography.Paragraph>
-                          Instructor: {course.instructor}
-                        </Typography.Paragraph>
-                        <Button theme="solid">Enter course</Button>
-                      </Space>
-                    </div>
-                  }
-                />
+                <CourseListItem course={course} key={course.id} />
               )}
             />
           </Card>

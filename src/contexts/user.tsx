@@ -10,6 +10,7 @@ interface IUserContext {
   logout: () => {};
   enrolments: API.Enrolment[];
   enrolledInCourse: (courseId: number) => boolean;
+  refreshEnrolments: () => void;
 }
 
 const UserContext = createContext<IUserContext>({} as any);
@@ -36,10 +37,13 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     refreshDeps: [token],
   });
 
-  const { data: enrolments } = useRequest(MainService.getEnrolments, {
-    ready: !!token,
-    refreshDeps: [token],
-  });
+  const { data: enrolments, refresh: refreshEnrolments } = useRequest(
+    MainService.getEnrolments,
+    {
+      ready: !!token,
+      refreshDeps: [token],
+    }
+  );
 
   const enrolmentsHash = useMemo(() => {
     const hash = new Set<number>();
@@ -80,6 +84,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         },
         enrolments: enrolments?.data ?? [],
         enrolledInCourse: enrolledInCourse,
+        refreshEnrolments: refreshEnrolments,
       }}
     >
       {children}
