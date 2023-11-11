@@ -107,6 +107,11 @@ const GlobalLayout = () => {
                     menu={[
                       { node: "title", name: "Identity: " + user.identity },
                       { node: "item", name: user.name, disabled: true },
+                      {
+                        node: "item",
+                        name: "My activities",
+                        onClick: () => navigate("/activities"),
+                      },
                       { node: "item", name: "Logout", onClick: logout },
                     ]}
                   >

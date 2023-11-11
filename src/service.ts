@@ -54,6 +54,12 @@ class MainService {
   }): Promise<API.BaseResponse<Partial<API.Enrolment>>> => {
     return request("/me/enrolments", { method: "post", data });
   };
+
+  static getMyActivities = async (
+    params: API.PaginationParams
+  ): Promise<API.BaseResponse<API.BasePagination<API.Activity>>> => {
+    return request("/me/activities", { params });
+  };
 }
 
 export default MainService;

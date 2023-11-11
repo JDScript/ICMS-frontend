@@ -23,6 +23,7 @@ declare namespace API {
     identity: "admin" | "teacher" | "user";
     last_login_at: number;
     last_activity_at: number;
+    current_login_at: number;
   }
 
   interface FaceRecognition {
@@ -65,5 +66,16 @@ declare namespace API {
   interface Enrolment {
     course_id: number;
     course: API.Course;
+  }
+
+  interface Activity {
+    id: number;
+    type: string;
+    path: string;
+    method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+    header: { [key: string]: string[] };
+    src_ip: string;
+    created_at: number;
+    updated_at: number;
   }
 }
