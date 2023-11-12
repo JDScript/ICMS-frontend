@@ -6,7 +6,7 @@ import path from "path";
 export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
-    base: "./",
+    base: mode === "electron" ? "./" : "/",
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),

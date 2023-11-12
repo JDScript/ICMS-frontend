@@ -17,7 +17,17 @@
     "!dist"
   ],
   "productName": "ICMS",
+  "appId": "app.jdscript.icms",
   "directories": {
     "output": "./dist-electron/electron"
+  },
+  "mac": {
+    "hardenedRuntime": true,
+    "extendInfo": {
+      "NSMicrophoneUsageDescription": "Please allow our app to access your audio to perform facial recognition",
+      "NSCameraUsageDescription": "Please allow our app to access your camera to perform facial recognition",
+      "com.apple.security.device.audio-input": true,
+      "com.apple.security.device.camera": true
+    }
   }
 }
