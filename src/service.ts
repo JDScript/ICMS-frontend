@@ -61,6 +61,10 @@ class MainService {
     return request("/me/activities", { params });
   };
 
+  static clearMyActivities = async (): Promise<null> => {
+    return request("/me/activities", { method: "delete" });
+  };
+
   static getCourseDetail = async (
     course_id: number
   ): Promise<API.BaseResponse<API.Course>> => {

@@ -2,14 +2,16 @@ import { useUser } from "@/contexts/user";
 import MainService from "@/service";
 import { extractData } from "@/utils/extractData";
 import {
+  Button,
   Descriptions,
   Layout,
+  Popconfirm,
   Table,
   Tag,
   Typography,
 } from "@douyinfe/semi-ui";
 import type { TagProps } from "@douyinfe/semi-ui/lib/es/tag";
-import { usePagination } from "ahooks";
+import { usePagination, useRequest } from "ahooks";
 import dayjs from "dayjs";
 
 const REQUEST_METHOD_MAP: { [key: string]: TagProps["color"] } = {
@@ -22,7 +24,7 @@ const REQUEST_METHOD_MAP: { [key: string]: TagProps["color"] } = {
 
 const ActivitiesPage = () => {
   const { user } = useUser();
-  const { data, pagination, loading } = usePagination(
+  const { data, pagination, loading, refresh } = usePagination(
     async ({ current, pageSize }) => {
       return extractData(
         MainService.getMyActivities({
@@ -35,6 +37,12 @@ const ActivitiesPage = () => {
       debounceWait: 500,
     }
   );
+
+  const { runAsync: clearMyActivities, loading: clearingMyActivities } =
+    useRequest(MainService.clearMyActivities, {
+      manual: true,
+      onSuccess: refresh,
+    });
 
   return (
     <Layout.Content style={{ padding: 24, width: "100%", overflow: "hidden" }}>
@@ -84,6 +92,17 @@ const ActivitiesPage = () => {
           },
         ]}
       />
+      <div style={{ textAlign: "right", marginBlock: 12 }}>
+        <Popconfirm
+          title="Are you sure to clear all your activities?"
+          content="This action cannot be undone!"
+          onConfirm={clearMyActivities}
+        >
+          <Button loading={clearingMyActivities} type="danger">
+            Clear my activities
+          </Button>
+        </Popconfirm>
+      </div>
       <div style={{ overflowX: "scroll" }}>
         <div style={{ minWidth: 1200 }}>
           <Table
