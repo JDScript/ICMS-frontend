@@ -102,6 +102,9 @@ const CourseDetailPage = () => {
                   icon={<IconLive />}
                   disabled={!course.zoom_link}
                   theme="solid"
+                  onClick={() => {
+                    window.open(course.zoom_link);
+                  }}
                 >
                   Zoom link
                 </Button>

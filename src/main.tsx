@@ -12,10 +12,10 @@ import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import duration from "dayjs/plugin/duration";
 
-dayjs.extend(utc)
-dayjs.extend(timezone)
-dayjs.tz.setDefault("Asia/Hong_Kong")
-dayjs.extend(duration)
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("Asia/Hong_Kong");
+dayjs.extend(duration);
 
 // Pages Import
 const IndexPage = lazy(async () => await import("@/pages/index"));
@@ -25,6 +25,7 @@ const CourseDetailPage = lazy(
   async () => await import("@/pages/courses/$course_id")
 );
 const ActivitiesPage = lazy(async () => await import("@/pages/activities"));
+const CalendarPage = lazy(async () => await import("@/pages/calendar"));
 
 // Error Pages
 const NotFoundPage = lazy(async () => await import("@/pages/404"));
@@ -47,6 +48,7 @@ const router = createBrowserRouter([
             element: <CourseDetailPage />,
           },
           { path: "/activities", element: <ActivitiesPage /> },
+          { path: "/calendar", element: <CalendarPage /> },
         ],
         errorElement: <InternalServerErrorPage />,
       },

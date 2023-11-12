@@ -230,6 +230,11 @@ const GlobalLayout = () => {
                         name: "My activities",
                         onClick: () => navigate("/activities"),
                       },
+                      {
+                        node: "item",
+                        name: "My calendar",
+                        onClick: () => navigate("/calendar"),
+                      },
                       { node: "item", name: "Logout", onClick: logout },
                     ]}
                   >

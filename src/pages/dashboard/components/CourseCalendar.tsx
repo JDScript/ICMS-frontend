@@ -10,6 +10,7 @@ import {
 import type { EventObject } from "@douyinfe/semi-ui/lib/es/calendar";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface CourseCalendarProps {
   mode?: "day" | "month" | "week";
@@ -30,6 +31,7 @@ const CourseCalendar = (props: CourseCalendarProps) => {
   );
 
   const { enrolments } = useUser();
+  const navigate = useNavigate();
 
   const events = useMemo(() => {
     const evs: EventObject[] = [];
@@ -63,7 +65,9 @@ const CourseCalendar = (props: CourseCalendarProps) => {
                     backgroundColor: "var(--semi-color-primary-light-default)",
                     height: "100%",
                     overflow: "hidden",
+                    cursor: "pointer",
                   }}
+                  onClick={() => navigate(`/courses/${course.id}`)}
                 >
                   <Typography.Text style={{ margin: -1 }}>
                     {course.code} - {course.section}
@@ -101,11 +105,10 @@ const CourseCalendar = (props: CourseCalendarProps) => {
         style={{
           width: "100%",
           justifyContent: "space-between",
-          marginBlockEnd: 12,
         }}
       >
         <Typography.Text strong style={{ color: "var(--semi-color-text-2)" }}>
-          {anchorDate.format("MMM D, YYYY")}
+          {mode === "day" && anchorDate.format("MMM D, YYYY ")}
         </Typography.Text>
         <ButtonGroup>
           <Button onClick={() => setAnchorDate(dayjs.tz())}>Today</Button>
@@ -119,6 +122,11 @@ const CourseCalendar = (props: CourseCalendarProps) => {
           />
         </ButtonGroup>
       </Space>
+      <Typography.Text
+        style={{ color: "var(--semi-color-text-2)", marginBlock: 8 }}
+      >
+        Calendar is shown in timezone: {dayjs.tz.guess()}
+      </Typography.Text>
       <Calendar
         mode={mode}
         style={{ borderRadius: 8, width: "100%" }}
