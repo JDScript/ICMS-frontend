@@ -8,12 +8,17 @@ import {
   IconTick,
 } from "@douyinfe/semi-icons";
 import {
+  IllustrationSuccess,
+  IllustrationSuccessDark,
+} from "@douyinfe/semi-illustrations";
+import {
   Avatar,
   Badge,
   Button,
   ButtonGroup,
   Divider,
   Dropdown,
+  Empty,
   Layout,
   List,
   Nav,
@@ -162,6 +167,17 @@ const GlobalLayout = () => {
                         >
                           View all messages
                         </Typography.Text>
+                      }
+                      emptyContent={
+                        <Empty
+                          image={
+                            <IllustrationSuccess width={120} height={120} />
+                          }
+                          darkModeImage={
+                            <IllustrationSuccessDark width={120} height={120} />
+                          }
+                          description="All messages are read"
+                        />
                       }
                       dataSource={unreadMessages.list}
                       renderItem={(message) => (
