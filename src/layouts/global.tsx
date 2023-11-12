@@ -16,7 +16,6 @@ import {
   Badge,
   Button,
   ButtonGroup,
-  Divider,
   Dropdown,
   Empty,
   Layout,
@@ -82,9 +81,10 @@ const GlobalLayout = () => {
 
   return (
     <Layout style={{ minHeight: "100%" }}>
-      <Layout.Header>
+      <Layout.Header style={{ height: 60 }}>
         <Nav
           mode="horizontal"
+          style={{ position: "fixed", zIndex: 999 }}
           header={{
             text: (
               <Typography.Text
@@ -261,7 +261,6 @@ const GlobalLayout = () => {
         }}
       >
         <Space vertical={true} align="center" style={{ width: "100%" }}>
-          <Divider />
           <Typography.Text type="tertiary">
             ©️ 2023 ICMS, Intelligent Course Management System
           </Typography.Text>

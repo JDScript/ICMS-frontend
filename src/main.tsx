@@ -1,6 +1,10 @@
 import { lazy } from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  createHashRouter,
+} from "react-router-dom";
 import GlobalLayout from "./layouts/global";
 import "./global.css";
 import { UserProvider } from "./contexts/user";
@@ -31,7 +35,14 @@ const CalendarPage = lazy(async () => await import("@/pages/calendar"));
 const NotFoundPage = lazy(async () => await import("@/pages/404"));
 const InternalServerErrorPage = lazy(async () => await import("@/pages/500"));
 
-const router = createBrowserRouter([
+let createRouter = createBrowserRouter;
+
+// For electron
+if (import.meta.env.MODE == "electron") {
+  createRouter = createHashRouter;
+}
+
+const router = createRouter([
   {
     path: "/",
     element: <GlobalLayout />,
