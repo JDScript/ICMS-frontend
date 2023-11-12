@@ -17,6 +17,10 @@ const CourseDetailPage = lazy(
 );
 const ActivitiesPage = lazy(async () => await import("@/pages/activities"));
 
+// Error Pages
+const NotFoundPage = lazy(async () => await import("@/pages/404"));
+const InternalServerErrorPage = lazy(async () => await import("@/pages/500"));
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -36,7 +40,12 @@ const router = createBrowserRouter([
           { path: "/activities", element: <ActivitiesPage /> },
         ],
       },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
     ],
+    errorElement: <InternalServerErrorPage />,
   },
 ]);
 
