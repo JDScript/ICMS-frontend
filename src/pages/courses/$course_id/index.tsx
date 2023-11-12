@@ -1,20 +1,30 @@
 import Loading from "@/components/Loading";
 import MainService from "@/service";
-import { IconArrowLeft, IconFile, IconLink } from "@douyinfe/semi-icons";
 import {
+  IconArrowLeft,
+  IconFile,
+  IconLink,
+  IconLive,
+} from "@douyinfe/semi-icons";
+import {
+  IllustrationConstruction,
+  IllustrationConstructionDark,
   IllustrationFailure,
   IllustrationFailureDark,
 } from "@douyinfe/semi-illustrations";
 import {
   Button,
+  Col,
   Collapse,
   Empty,
   Layout,
+  Row,
   Space,
   Typography,
 } from "@douyinfe/semi-ui";
 import { useRequest } from "ahooks";
 import { useNavigate, useParams } from "react-router-dom";
+import NextOrCurrentSession from "./NextOrCurrentSession";
 
 const CourseDetailPage = () => {
   const { course_id } = useParams<{ course_id: string }>();
@@ -64,51 +74,89 @@ const CourseDetailPage = () => {
 
   return (
     <Layout.Content style={{ padding: 24 }}>
-      <Space align="start">
-        <Button
-          icon={<IconArrowLeft />}
-          onClick={() => navigate("/dashboard")}
-        />
-        <Typography.Title heading={3}>
-          {`${course.code} ${course.title} [Section ${course.section}, ${course.year}]`}
-          <Typography.Text>
-            <Typography.Paragraph>
-              Instructor: {course.instructor}
-            </Typography.Paragraph>
-            <Typography.Paragraph style={{ color: "var(--semi-color-text-2)" }}>
-              {course.summary ? course.summary : "No summary provided"}
-            </Typography.Paragraph>
-          </Typography.Text>
-        </Typography.Title>
-      </Space>
-      <Collapse
-        clickHeaderToExpand
-        defaultActiveKey={sections.map((s) => s.id.toString())}
-        style={{ marginBlock: 12 }}
-      >
-        {sections.map((section) => (
-          <Collapse.Panel
-            itemKey={section.id.toString()}
-            header={
-              <Typography.Title heading={4}>{section.name}</Typography.Title>
-            }
-          >
-            <span dangerouslySetInnerHTML={{ __html: section.summary }} />
-            {section.modules.map((module) => (
-              <div style={{ marginInline: module.indent * 24 }}>
-                <Typography.Text
-                  link={{ href: module.link, target: "_blank" }}
-                  icon={
-                    module.module_type == "link" ? <IconLink /> : <IconFile />
+      <Row gutter={[8, 16]}>
+        <Col xs={24} sm={24} md={12} lg={8} xl={6} xxl={4}>
+          <Space align="start">
+            <Button
+              theme="borderless"
+              icon={<IconArrowLeft />}
+              onClick={() => navigate("/dashboard")}
+              type="tertiary"
+            />
+            <div>
+              <Space vertical align="start">
+                <Typography.Title heading={3}>
+                  {`${course.code} ${course.title} [Section ${course.section}, ${course.year}]`}
+                </Typography.Title>
+                <div>
+                  <Typography.Paragraph>
+                    Instructor: {course.instructor}
+                  </Typography.Paragraph>
+                  <Typography.Paragraph
+                    style={{ color: "var(--semi-color-text-2)" }}
+                  >
+                    {course.summary ? course.summary : "No summary provided"}
+                  </Typography.Paragraph>
+                </div>
+                <Button
+                  icon={<IconLive />}
+                  disabled={!course.zoom_link}
+                  theme="solid"
+                >
+                  Zoom link
+                </Button>
+                <NextOrCurrentSession course={course} />
+              </Space>
+            </div>
+          </Space>
+        </Col>
+        <Col xs={24} sm={24} md={12} lg={16} xl={18} xxl={20}>
+          {sections.length > 0 ? (
+            <Collapse clickHeaderToExpand style={{ marginBlock: 12 }} accordion>
+              {sections.map((section) => (
+                <Collapse.Panel
+                  key={section.id}
+                  itemKey={section.id.toString()}
+                  header={
+                    <Typography.Title heading={4}>
+                      {section.name}
+                    </Typography.Title>
                   }
                 >
-                  {module.name}
-                </Typography.Text>
-              </div>
-            ))}
-          </Collapse.Panel>
-        ))}
-      </Collapse>
+                  <span dangerouslySetInnerHTML={{ __html: section.summary }} />
+                  {section.modules.map((module) => (
+                    <div
+                      style={{ marginInline: module.indent * 24 }}
+                      key={module.id}
+                    >
+                      <Typography.Text
+                        link={{ href: module.link, target: "_blank" }}
+                        icon={
+                          module.module_type == "link" ? (
+                            <IconLink />
+                          ) : (
+                            <IconFile />
+                          )
+                        }
+                      >
+                        {module.name}
+                      </Typography.Text>
+                    </div>
+                  ))}
+                </Collapse.Panel>
+              ))}
+            </Collapse>
+          ) : (
+            <Empty
+              title="Empty"
+              description="Still waiting for instructor to upload course materials!"
+              image={<IllustrationConstruction />}
+              darkModeImage={<IllustrationConstructionDark />}
+              style={{ marginBlock: 24 }}
+            />
+          )}
+        </Col>
+      </Row>
     </Layout.Content>
   );
 };

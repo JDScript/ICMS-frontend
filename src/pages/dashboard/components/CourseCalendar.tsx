@@ -18,7 +18,7 @@ interface CourseCalendarProps {
 const CourseCalendar = (props: CourseCalendarProps) => {
   const { mode = "week" } = props;
 
-  const [anchorDate, setAnchorDate] = useState(dayjs());
+  const [anchorDate, setAnchorDate] = useState(dayjs.tz());
 
   const startOfCalendar = useMemo(
     () => anchorDate.startOf(mode).add(-1, mode),
@@ -36,21 +36,21 @@ const CourseCalendar = (props: CourseCalendarProps) => {
     for (const { course } of enrolments) {
       const filteredSlots = course.slots.filter((slot) => {
         return (
-          !dayjs(slot.end_date).isBefore(startOfCalendar) &&
-          !dayjs(slot.start_date).isAfter(endOfCalendar)
+          !dayjs.tz(slot.end_date).isBefore(startOfCalendar) &&
+          !dayjs.tz(slot.start_date).isAfter(endOfCalendar)
         );
       });
 
       for (const slot of filteredSlots) {
-        let date = dayjs(slot.start_date);
-        const endDate = dayjs(slot.end_date).endOf("day");
+        let date = dayjs.tz(slot.start_date);
+        const endDate = dayjs.tz(slot.end_date).endOf("day");
         while (date.isBefore(endOfCalendar) && date.isBefore(endDate)) {
           if (date.isSame(startOfCalendar) || date.isAfter(startOfCalendar)) {
             const today = date.format("YYYY-MM-DDT");
             evs.push({
               key: `${course.code}_${course.section}-${today}-${slot.start_time}-${slot.end_time}`,
-              start: dayjs(today + slot.start_time).toDate(),
-              end: dayjs(today + slot.end_time).toDate(),
+              start: dayjs.tz(today + slot.start_time).toDate(),
+              end: dayjs.tz(today + slot.end_time).toDate(),
               allDay: false,
               children: (
                 <div
@@ -108,7 +108,7 @@ const CourseCalendar = (props: CourseCalendarProps) => {
           {anchorDate.format("MMM D, YYYY")}
         </Typography.Text>
         <ButtonGroup>
-          <Button onClick={() => setAnchorDate(dayjs())}>Today</Button>
+          <Button onClick={() => setAnchorDate(dayjs.tz())}>Today</Button>
           <Button
             onClick={() => setAnchorDate((prev) => prev.add(-1, mode))}
             icon={<IconArrowLeft />}
@@ -125,7 +125,10 @@ const CourseCalendar = (props: CourseCalendarProps) => {
         events={events}
         markWeekend
         displayValue={anchorDate.toDate()}
-        showCurrTime={dayjs().startOf("day").isSame(anchorDate.startOf("day"))}
+        showCurrTime={dayjs
+          .tz()
+          .startOf("day")
+          .isSame(anchorDate.startOf("day"))}
         scrollTop={500}
       />
     </div>

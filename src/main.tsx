@@ -7,6 +7,15 @@ import { UserProvider } from "./contexts/user";
 import AuthWrapper from "./wrappers/auth";
 import { ConfigProvider } from "@douyinfe/semi-ui";
 import en_US from "@douyinfe/semi-ui/lib/es/locale/source/en_US";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+import duration from "dayjs/plugin/duration";
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
+dayjs.tz.setDefault("Asia/Hong_Kong")
+dayjs.extend(duration)
 
 // Pages Import
 const IndexPage = lazy(async () => await import("@/pages/index"));
@@ -39,6 +48,7 @@ const router = createBrowserRouter([
           },
           { path: "/activities", element: <ActivitiesPage /> },
         ],
+        errorElement: <InternalServerErrorPage />,
       },
       {
         path: "*",
@@ -51,7 +61,7 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <UserProvider>
-    <ConfigProvider locale={en_US}>
+    <ConfigProvider locale={en_US} timeZone={"Asia/Hong_Kong"}>
       <RouterProvider router={router} />
     </ConfigProvider>
   </UserProvider>
