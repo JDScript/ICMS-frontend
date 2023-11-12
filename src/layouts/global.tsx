@@ -1,14 +1,23 @@
-import React from "react";
 import Loading from "@/components/Loading";
 import { useUser } from "@/contexts/user";
-import { IconMoon, IconSun } from "@douyinfe/semi-icons";
+import {
+  IconMail,
+  IconMoon,
+  IconRefresh,
+  IconSun,
+  IconTick,
+} from "@douyinfe/semi-icons";
 import {
   Avatar,
+  Badge,
   Button,
+  ButtonGroup,
   Divider,
   Dropdown,
   Layout,
+  List,
   Nav,
+  Popover,
   Space,
   Spin,
   Tooltip,
@@ -20,7 +29,14 @@ import { useOutlet, useNavigate } from "react-router-dom";
 const GlobalLayout = () => {
   const [dark, setDark] = useState(false);
   const outlet = useOutlet();
-  const { token, user, logout } = useUser();
+  const {
+    token,
+    user,
+    logout,
+    unreadMessages,
+    unreadMessagesLoading,
+    refreshUnreadMessages,
+  } = useUser();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -78,12 +94,12 @@ const GlobalLayout = () => {
           }}
           items={[
             {
-              text: "All Courses",
+              text: "Courses",
               onClick: () => navigate("/courses"),
             },
           ]}
           footer={
-            <React.Fragment>
+            <Space>
               <Tooltip
                 trigger="hover"
                 content={dark ? "Light" : "Dark"}
@@ -96,11 +112,97 @@ const GlobalLayout = () => {
                   }
                   style={{
                     color: "var(--semi-color-text-2)",
-                    marginRight: "12px",
                   }}
                   onClick={switchMode}
                 />
               </Tooltip>
+              {token && (
+                <Popover
+                  trigger="click"
+                  position="bottom"
+                  style={{ minWidth: 300 }}
+                  content={
+                    <List
+                      size="small"
+                      style={{ padding: 0 }}
+                      loading={unreadMessagesLoading}
+                      header={
+                        <Space
+                          style={{
+                            width: "100%",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Typography.Text strong>
+                            Unread messages
+                          </Typography.Text>
+                          <ButtonGroup style={{ marginRight: -8 }}>
+                            <Button
+                              theme="borderless"
+                              type="tertiary"
+                              size="small"
+                              icon={<IconRefresh size="small" />}
+                              loading={unreadMessagesLoading}
+                              onClick={refreshUnreadMessages}
+                            />
+                            <Button
+                              theme="borderless"
+                              type="tertiary"
+                              size="small"
+                              icon={<IconTick size="small" />}
+                            />
+                          </ButtonGroup>
+                        </Space>
+                      }
+                      footer={
+                        <Typography.Text
+                          link
+                          style={{ display: "block", textAlign: "center" }}
+                          onClick={() => navigate("/messages")}
+                        >
+                          View all messages
+                        </Typography.Text>
+                      }
+                      dataSource={unreadMessages.list}
+                      renderItem={(message) => (
+                        <List.Item
+                          main={
+                            <div>
+                              <Typography.Paragraph strong>
+                                {message.title}
+                              </Typography.Paragraph>
+                              <Typography.Paragraph
+                                style={{
+                                  fontSize: 12,
+                                }}
+                              >{`${message.course?.code}_${message.course?.section}_${message.course?.year}`}</Typography.Paragraph>
+                            </div>
+                          }
+                        />
+                      )}
+                    />
+                  }
+                >
+                  <Badge
+                    count={
+                      unreadMessages.total != 0
+                        ? unreadMessages.total
+                        : undefined
+                    }
+                    overflowCount={99}
+                    type="danger"
+                  >
+                    <Button
+                      theme={unreadMessages.total != 0 ? "light" : "borderless"}
+                      icon={<IconMail size="large" />}
+                      style={{
+                        color: "var(--semi-color-text-2)",
+                      }}
+                      loading={!user}
+                    />
+                  </Badge>
+                </Popover>
+              )}
               {token &&
                 (user ? (
                   <Dropdown
@@ -115,14 +217,16 @@ const GlobalLayout = () => {
                       { node: "item", name: "Logout", onClick: logout },
                     ]}
                   >
-                    <Avatar size="small">{user?.name.slice(0, 1)}</Avatar>
+                    <Avatar size="small" style={{ marginInlineStart: 4 }}>
+                      {user?.name.slice(0, 1)}
+                    </Avatar>
                   </Dropdown>
                 ) : (
-                  <Avatar size="small">
+                  <Avatar size="small" style={{ marginInlineStart: 4 }}>
                     <Spin />
                   </Avatar>
                 ))}
-            </React.Fragment>
+            </Space>
           }
         />
       </Layout.Header>

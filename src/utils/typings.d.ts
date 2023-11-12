@@ -101,4 +101,15 @@ declare namespace API {
     created_at: number;
     updated_at: number;
   }
+
+  interface CourseMessage {
+    id: number;
+    course_id: number;
+    course?: API.Course;
+    title: string;
+    content: string;
+    read_at: null | number;
+    created_at: number;
+    updated_at: number;
+  }
 }

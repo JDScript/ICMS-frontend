@@ -11,6 +11,9 @@ interface IUserContext {
   enrolments: API.Enrolment[];
   enrolledInCourse: (courseId: number) => boolean;
   refreshEnrolments: () => void;
+  unreadMessages: API.BasePagination<API.CourseMessage>;
+  unreadMessagesLoading: boolean;
+  refreshUnreadMessages: () => void;
 }
 
 const UserContext = createContext<IUserContext>({} as any);
@@ -40,8 +43,20 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const { data: enrolments, refresh: refreshEnrolments } = useRequest(
     MainService.getEnrolments,
     {
-      ready: !!token,
-      refreshDeps: [token],
+      ready: !!user,
+      refreshDeps: [user],
+    }
+  );
+
+  const {
+    data: unreadMessages,
+    refresh: refreshUnreadMessages,
+    loading: unreadMessagesLoading,
+  } = useRequest(
+    async () => await MainService.getMyMessages({ unread: true }),
+    {
+      ready: !!user,
+      refreshDeps: [user],
     }
   );
 
@@ -85,6 +100,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         enrolments: enrolments?.data ?? [],
         enrolledInCourse: enrolledInCourse,
         refreshEnrolments: refreshEnrolments,
+        unreadMessages: unreadMessages?.data ?? { list: [], total: 0 },
+        unreadMessagesLoading: unreadMessagesLoading,
+        refreshUnreadMessages: refreshUnreadMessages,
       }}
     >
       {children}
