@@ -59,7 +59,7 @@ const ActivitiesPage = () => {
             value: (
               <span style={{ fontVariantNumeric: "tabular-nums" }}>
                 {user?.current_login_at
-                  ? dayjs(user.current_login_at * 1000).format(
+                  ? dayjs(user.current_login_at).format(
                       " YYYY-MM-DD HH:mm:ss Z"
                     )
                   : " Never"}
@@ -71,9 +71,7 @@ const ActivitiesPage = () => {
             value: (
               <span style={{ fontVariantNumeric: "tabular-nums" }}>
                 {user?.last_login_at
-                  ? dayjs(user.last_login_at * 1000).format(
-                      " YYYY-MM-DD HH:mm:ss Z"
-                    )
+                  ? dayjs(user.last_login_at).format(" YYYY-MM-DD HH:mm:ss Z")
                   : " Never"}
               </span>
             ),
@@ -83,7 +81,7 @@ const ActivitiesPage = () => {
             value: (
               <span style={{ fontVariantNumeric: "tabular-nums" }}>
                 {user?.last_activity_at
-                  ? dayjs(user.last_activity_at * 1000).format(
+                  ? dayjs(user.last_activity_at).format(
                       " YYYY-MM-DD HH:mm:ss Z"
                     )
                   : " Never"}
@@ -157,9 +155,7 @@ const ActivitiesPage = () => {
                 title: "Record Time",
                 render: (_, act) => (
                   <span style={{ fontVariant: "tabular-nums" }}>
-                    {dayjs(act.created_at * 1000).format(
-                      "YYYY-MM-DD HH:mm:ss Z"
-                    )}
+                    {dayjs(act.created_at).format("YYYY-MM-DD HH:mm:ss Z")}
                   </span>
                 ),
               },

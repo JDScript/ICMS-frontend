@@ -15,7 +15,7 @@ const DashboardPage = () => {
           <Typography.Text style={{ color: "var(--semi-color-text-2)" }}>
             Last login at:
             {user?.last_login_at
-              ? dayjs(user.last_login_at * 1000).format(" YYYY-MM-DD HH:mm:ss")
+              ? dayjs(user.last_login_at).format(" YYYY-MM-DD HH:mm:ss")
               : " Never"}
           </Typography.Text>
           <Card title="Upcoming Session" style={{ marginBlock: 16 }}>
