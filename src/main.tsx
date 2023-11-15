@@ -30,6 +30,7 @@ const CourseDetailPage = lazy(
 );
 const ActivitiesPage = lazy(async () => await import("@/pages/activities"));
 const CalendarPage = lazy(async () => await import("@/pages/calendar"));
+const MessagesPage = lazy(async () => await import("@/pages/messages"));
 
 // Error Pages
 const NotFoundPage = lazy(async () => await import("@/pages/404"));
@@ -60,6 +61,7 @@ const router = createRouter([
           },
           { path: "/activities", element: <ActivitiesPage /> },
           { path: "/calendar", element: <CalendarPage /> },
+          { path: "/messages", element: <MessagesPage /> },
         ],
         errorElement: <InternalServerErrorPage />,
       },
