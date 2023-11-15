@@ -82,6 +82,15 @@ class MainService {
   ): Promise<API.BaseResponse<API.CourseSection[]>> => {
     return request(`/courses/${course_id}/sections`);
   };
+
+  static readMessages = async (data: {
+    messages_id: number[];
+  }): Promise<null> => {
+    return request("/me/messages", {
+      method: "delete",
+      data,
+    });
+  };
 }
 
 export default MainService;

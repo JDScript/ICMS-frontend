@@ -40,6 +40,8 @@ const GlobalLayout = () => {
     unreadMessages,
     unreadMessagesLoading,
     refreshUnreadMessages,
+    readMessages,
+    readingMessagesLoading,
   } = useUser();
   const navigate = useNavigate();
 
@@ -130,7 +132,7 @@ const GlobalLayout = () => {
                     <List
                       size="small"
                       style={{ padding: 0 }}
-                      loading={unreadMessagesLoading}
+                      loading={unreadMessagesLoading || readingMessagesLoading}
                       header={
                         <Space
                           style={{
@@ -155,6 +157,14 @@ const GlobalLayout = () => {
                               type="tertiary"
                               size="small"
                               icon={<IconTick size="small" />}
+                              loading={readingMessagesLoading}
+                              onClick={() => {
+                                readMessages({
+                                  messages_id: unreadMessages.list.map(
+                                    (m) => m.id
+                                  ),
+                                });
+                              }}
                             />
                           </ButtonGroup>
                         </Space>

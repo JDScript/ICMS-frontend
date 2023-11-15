@@ -14,6 +14,8 @@ interface IUserContext {
   unreadMessages: API.BasePagination<API.CourseMessage>;
   unreadMessagesLoading: boolean;
   refreshUnreadMessages: () => void;
+  readingMessagesLoading: boolean;
+  readMessages: (data: { messages_id: number[] }) => void;
 }
 
 const UserContext = createContext<IUserContext>({} as any);
@@ -60,6 +62,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     }
   );
 
+  const { run: readMessages, loading: readingMessagesLoading } = useRequest(
+    MainService.readMessages,
+    {
+      manual: true,
+      onFinally: refreshUnreadMessages,
+    }
+  );
+
   const enrolmentsHash = useMemo(() => {
     const hash = new Set<number>();
     enrolments?.data.forEach((e) => hash.add(e.course_id));
@@ -103,6 +113,8 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         unreadMessages: unreadMessages?.data ?? { list: [], total: 0 },
         unreadMessagesLoading: unreadMessagesLoading,
         refreshUnreadMessages: refreshUnreadMessages,
+        readMessages: readMessages,
+        readingMessagesLoading: readingMessagesLoading,
       }}
     >
       {children}
