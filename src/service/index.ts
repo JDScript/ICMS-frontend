@@ -1,4 +1,4 @@
-import request from "./utils/request";
+import request from "../utils/request";
 
 class MainService {
   // the value of face should be jpeg image after base64 encoded
@@ -93,4 +93,5 @@ class MainService {
   };
 }
 
+export * from "./gpt";
 export default MainService;

@@ -1,11 +1,22 @@
 import { useUser } from "@/contexts/user";
-import { Card, Col, Layout, List, Row, Typography } from "@douyinfe/semi-ui";
+import {
+  Button,
+  Card,
+  Col,
+  Layout,
+  List,
+  Row,
+  Typography,
+} from "@douyinfe/semi-ui";
 import dayjs from "dayjs";
 import CourseCalendar from "./components/CourseCalendar";
 import CourseListItem from "@/components/CourseListItem";
+import { IconCustomerSupport } from "@douyinfe/semi-icons";
+import useGPTSheet from "./components/useGPTSheet";
 
 const DashboardPage = () => {
   const { user, enrolments } = useUser();
+  const { gptSheet, open: openGPTSheet } = useGPTSheet();
 
   return (
     <Layout.Content style={{ padding: 24 }}>
@@ -18,6 +29,16 @@ const DashboardPage = () => {
               ? dayjs(user.last_login_at).format(" YYYY-MM-DD HH:mm:ss")
               : " Never"}
           </Typography.Text>
+          <Button
+            icon={<IconCustomerSupport />}
+            block
+            size="large"
+            theme="solid"
+            style={{ marginBlockStart: 16 }}
+            onClick={() => openGPTSheet()}
+          >
+            Ask ICMS GPT for help!
+          </Button>
           <Card title="Upcoming Session" style={{ marginBlock: 16 }}>
             No upcoming session within 1 hour.
           </Card>
@@ -38,6 +59,7 @@ const DashboardPage = () => {
           <CourseCalendar mode="day" />
         </Col>
       </Row>
+      {gptSheet}
     </Layout.Content>
   );
 };

@@ -113,3 +113,76 @@ declare namespace API {
     updated_at: number;
   }
 }
+
+declare namespace GPT {
+  interface Request {
+    model: "gpt-35-turbo";
+    messages: Message[];
+    max_tokens: number;
+    temperature: number;
+    top_p: number;
+    tools?: Tool[];
+    tool_choice?: "auto";
+  }
+
+  interface Response {
+    id: string;
+    object: "chat.completion";
+    created: number;
+    model: string;
+    prompt_filter_results: {
+      prompt_index: number;
+      content_filter_results: ContentFilterResult;
+    }[];
+    choices: {
+      index: number;
+      finish_reason: "stop" | "length" | "content_filter" | "tool_calls";
+      message: Message;
+    }[];
+  }
+
+  interface Message {
+    role: "system" | "user" | "assistant" | "tool";
+    content: string;
+    tool_calls?: {
+      id: string;
+      type: string;
+      function: {
+        name: string;
+        arguments: string;
+      };
+    }[];
+    name?: string;
+    tool_call_id?: string;
+  }
+
+  interface Tool {
+    type: "function";
+    function: Function;
+  }
+
+  interface Function {
+    name: string;
+    description: string;
+    parameters: object;
+  }
+
+  interface ContentFilterResult {
+    hate: {
+      filterer: boolean;
+      severity: string;
+    };
+    self_harm: {
+      filterer: boolean;
+      severity: string;
+    };
+    sexual: {
+      filterer: boolean;
+      severity: string;
+    };
+    violence: {
+      filterer: boolean;
+      severity: string;
+    };
+  }
+}

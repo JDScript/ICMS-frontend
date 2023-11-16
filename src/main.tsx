@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 import duration from "dayjs/plugin/duration";
+import { GPTProvider } from "./contexts/gpt";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -76,8 +77,10 @@ const router = createRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <UserProvider>
-    <ConfigProvider locale={en_US} timeZone={"Asia/Hong_Kong"}>
-      <RouterProvider router={router} />
-    </ConfigProvider>
+    <GPTProvider>
+      <ConfigProvider locale={en_US} timeZone={"Asia/Hong_Kong"}>
+        <RouterProvider router={router} />
+      </ConfigProvider>
+    </GPTProvider>
   </UserProvider>
 );
