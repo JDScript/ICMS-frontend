@@ -54,9 +54,17 @@ const useGPTSheet = () => {
           overflow: "scroll",
         }}
       >
-        {messages.map((msg, idx) => (
-          <div key={idx}>{msg.content}</div>
-        ))}
+        {messages
+          .filter((v) => v.role != "tool")
+          .map((msg, idx) =>
+            msg.tool_calls ? (
+              <div>{msg.role}: Checking in your system...</div>
+            ) : (
+              <div key={idx}>
+                {msg.role}: {msg.content}
+              </div>
+            )
+          )}
         {msgWaitForReply && <div>{msgWaitForReply}</div>}
       </div>
       <Space>
