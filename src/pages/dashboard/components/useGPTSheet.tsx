@@ -1,6 +1,75 @@
 import { useGPT } from "@/contexts/gpt";
-import { Button, Input, Modal, SideSheet, Space } from "@douyinfe/semi-ui";
+import { useUser } from "@/contexts/user";
+import { IconCustomerSupport } from "@douyinfe/semi-icons";
+import {
+  IllustrationNoContent,
+  IllustrationNoContentDark,
+} from "@douyinfe/semi-illustrations";
+import {
+  Avatar,
+  Button,
+  Empty,
+  Input,
+  Modal,
+  SideSheet,
+  Space,
+  Typography,
+} from "@douyinfe/semi-ui";
 import { useState } from "react";
+
+const UserMessage = ({ msg }: { msg: GPT.Message }) => {
+  const { user } = useUser();
+  return (
+    <div
+      style={{
+        display: "flex",
+        padding: 8,
+        flexDirection: "row",
+        justifyContent: "flex-end",
+      }}
+    >
+      <div
+        style={{
+          marginInlineEnd: 12,
+          paddingTop: 6,
+          flex: 1,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "flex-end",
+        }}
+      >
+        <div>
+          <Typography.Paragraph>{msg.content}</Typography.Paragraph>
+        </div>
+      </div>
+      <Avatar size="small">{user?.name.slice(0, 1)}</Avatar>
+    </div>
+  );
+};
+
+const AssistantMessage = ({ msg }: { msg: GPT.Message }) => {
+  return (
+    <div
+      style={{
+        display: "flex",
+        padding: 8,
+        flexDirection: "row",
+        justifyContent: "flex",
+      }}
+    >
+      <Avatar size="small">
+        <IconCustomerSupport />
+      </Avatar>
+      <div style={{ marginInlineStart: 12, paddingTop: 6, flex: 1 }}>
+        {msg.tool_calls ? (
+          <Typography.Paragraph>Checking in the system...</Typography.Paragraph>
+        ) : (
+          <Typography.Paragraph>{msg.content}</Typography.Paragraph>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const useGPTSheet = () => {
   const [open, setOpen] = useState(false);
@@ -43,6 +112,7 @@ const useGPTSheet = () => {
         flexDirection: "column",
         paddingBlockEnd: 24,
       }}
+      style={{ maxWidth: "100%" }}
     >
       <div
         style={{
@@ -52,17 +122,29 @@ const useGPTSheet = () => {
           backgroundColor: "var(--semi-color-default)",
           marginBlockEnd: 12,
           overflow: "scroll",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
+        {messages.length == 0 && (
+          <Empty
+            style={{
+              justifyContent: "center",
+              flex: 1,
+            }}
+            image={<IllustrationNoContent />}
+            darkModeImage={<IllustrationNoContentDark />}
+            title="You haven't ask any thing!"
+            description="Try ask: Have I enrolled in COMP3278?"
+          />
+        )}
         {messages
           .filter((v) => v.role != "tool")
           .map((msg, idx) =>
-            msg.tool_calls ? (
-              <div>{msg.role}: Checking in your system...</div>
+            msg.role == "user" ? (
+              <UserMessage msg={msg} key={idx} />
             ) : (
-              <div key={idx}>
-                {msg.role}: {msg.content}
-              </div>
+              <AssistantMessage msg={msg} key={idx} />
             )
           )}
         {msgWaitForReply && <div>{msgWaitForReply}</div>}
@@ -83,7 +165,7 @@ const useGPTSheet = () => {
               disabled={loading}
               value={userInput}
               onChange={setUserInput}
-              onSubmitCapture={() => sendMsg(userInput)}
+              onEnterPress={() => sendMsg(userInput)}
             />
             <Button
               theme="solid"
