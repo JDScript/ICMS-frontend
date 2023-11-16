@@ -1,3 +1,4 @@
+import useMessageSheet from "@/components/useMessageSheet";
 import MainService from "@/service";
 import { extractData } from "@/utils/extractData";
 import {
@@ -37,6 +38,7 @@ const MessagesPage = () => {
     }
   );
   const navigate = useNavigate();
+  const { sheet, openMsg } = useMessageSheet();
 
   return (
     <Layout.Content style={{ padding: 24, overflow: "hidden" }}>
@@ -71,7 +73,11 @@ const MessagesPage = () => {
                 dataIndex: "title",
                 title: "Title",
                 render: (_, record) => (
-                  <Typography.Text link ellipsis={{ showTooltip: true }}>
+                  <Typography.Text
+                    link
+                    ellipsis={{ showTooltip: true }}
+                    onClick={() => openMsg(record)}
+                  >
                     {record.title}
                   </Typography.Text>
                 ),
@@ -121,6 +127,7 @@ const MessagesPage = () => {
           />
         </div>
       </div>
+      {sheet}
     </Layout.Content>
   );
 };

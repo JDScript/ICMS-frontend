@@ -1,4 +1,5 @@
 import Loading from "@/components/Loading";
+import useMessageSheet from "@/components/useMessageSheet";
 import { useUser } from "@/contexts/user";
 import {
   IconMail,
@@ -80,6 +81,8 @@ const GlobalLayout = () => {
         }
       });
   }, []);
+
+  const { sheet, openMsg } = useMessageSheet();
 
   return (
     <Layout style={{ minHeight: "100%" }}>
@@ -192,6 +195,7 @@ const GlobalLayout = () => {
                       dataSource={unreadMessages.list}
                       renderItem={(message) => (
                         <List.Item
+                          onClick={() => openMsg(message)}
                           main={
                             <div>
                               <Typography.Paragraph strong>
@@ -276,6 +280,7 @@ const GlobalLayout = () => {
           </Typography.Text>
         </Space>
       </Layout.Footer>
+      {sheet}
     </Layout>
   );
 };
