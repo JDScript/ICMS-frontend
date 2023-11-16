@@ -27,7 +27,12 @@
       "NSMicrophoneUsageDescription": "Please allow our app to access your audio to perform facial recognition",
       "NSCameraUsageDescription": "Please allow our app to access your camera to perform facial recognition",
       "com.apple.security.device.audio-input": true,
-      "com.apple.security.device.camera": true
-    }
+      "com.apple.security.device.camera": true,
+      "com.apple.security.cs.allow-dyld-environment-variables": true,
+      "com.apple.security.cs.allow-jit": true,
+      "com.apple.security.cs.allow-unsigned-executable-memory": true
+    },
+    "entitlements": "./entitlements.mac.plist",
+    "entitlementsInherit": "./entitlements.mac.plist"
   }
 }

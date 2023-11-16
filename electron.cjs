@@ -22,6 +22,8 @@ app.whenReady().then(() => {
       createWindow();
     }
   });
+
+  checkAndApplyDeviceAccessPrivilege();
 });
 
 app.on("window-all-closed", () => {
@@ -29,3 +31,26 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
+
+async function checkAndApplyDeviceAccessPrivilege() {
+  const cameraPrivilege = systemPreferences.getMediaAccessStatus("camera");
+  console.log(
+    `checkAndApplyDeviceAccessPrivilege before apply cameraPrivilege: ${cameraPrivilege}`
+  );
+  if (cameraPrivilege !== "granted") {
+    await systemPreferences.askForMediaAccess("camera");
+  }
+
+  const micPrivilege = systemPreferences.getMediaAccessStatus("microphone");
+  console.log(
+    `checkAndApplyDeviceAccessPrivilege before apply micPrivilege: ${micPrivilege}`
+  );
+  if (micPrivilege !== "granted") {
+    await systemPreferences.askForMediaAccess("microphone");
+  }
+
+  const screenPrivilege = systemPreferences.getMediaAccessStatus("screen");
+  console.log(
+    `checkAndApplyDeviceAccessPrivilege before apply screenPrivilege: ${screenPrivilege}`
+  );
+}
