@@ -147,7 +147,9 @@ const useGPTSheet = () => {
               <AssistantMessage msg={msg} key={idx} />
             )
           )}
-        {msgWaitForReply && <div>{msgWaitForReply}</div>}
+        {msgWaitForReply && (
+          <UserMessage msg={{ role: "user", content: msgWaitForReply }} />
+        )}
       </div>
       <Space>
         {error ? (
