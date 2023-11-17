@@ -16,6 +16,7 @@ import {
   Typography,
 } from "@douyinfe/semi-ui";
 import { useState } from "react";
+import Markdown from "react-markdown";
 
 const UserMessage = ({ msg }: { msg: GPT.Message }) => {
   const { user } = useUser();
@@ -64,7 +65,9 @@ const AssistantMessage = ({ msg }: { msg: GPT.Message }) => {
         {msg.tool_calls ? (
           <Typography.Paragraph>Checking in the system...</Typography.Paragraph>
         ) : (
-          <Typography.Paragraph>{msg.content}</Typography.Paragraph>
+          <Typography.Paragraph>
+            <Markdown>{msg.content}</Markdown>
+          </Typography.Paragraph>
         )}
       </div>
     </div>
