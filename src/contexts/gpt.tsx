@@ -155,6 +155,11 @@ export const GPTProvider = ({ children }: { children: React.ReactNode }) => {
             const search = JSON.parse(tool_call.function.arguments).search;
             try {
               result = (await MainService.getCourses({ search: search })).data;
+              result.list = result.list.map((c) => ({
+                ...c,
+                slots: [],
+                zoom_link: "",
+              }));
             } catch (e) {
               result = (e as Error).message;
             }
@@ -170,9 +175,11 @@ export const GPTProvider = ({ children }: { children: React.ReactNode }) => {
               tool_call.function.arguments
             ).course_id;
             try {
-              result = await MainService.enrolInCourse({ course_id: course_id });
+              result = await MainService.enrolInCourse({
+                course_id: course_id,
+              });
             } catch (e) {
-              result = (e as Error).message
+              result = (e as Error).message;
             }
             refreshEnrolments();
             messages.push({

@@ -15,7 +15,7 @@ import {
   Space,
   Typography,
 } from "@douyinfe/semi-ui";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Markdown from "react-markdown";
 
 const UserMessage = ({ msg }: { msg: GPT.Message }) => {
@@ -55,13 +55,15 @@ const AssistantMessage = ({ msg }: { msg: GPT.Message }) => {
         display: "flex",
         padding: 8,
         flexDirection: "row",
-        justifyContent: "flex",
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
       }}
     >
-      <Avatar size="small">
+      <Avatar size="small" style={{ marginBlock: "0.5em" }}>
         <IconCustomerSupport />
       </Avatar>
-      <div style={{ marginInlineStart: 12, paddingTop: 6, flex: 1 }}>
+
+      <div style={{ flex: 1, paddingInlineStart: 12 }}>
         {msg.tool_calls ? (
           <Typography.Paragraph>Checking in the system...</Typography.Paragraph>
         ) : (
@@ -98,6 +100,12 @@ const useGPTSheet = () => {
     }
   };
 
+  const messageArea = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messageArea.current?.scrollTo({ top: messageArea.current.scrollHeight });
+  }, [messages, msgWaitForReply]);
+
   const sheet = (
     <SideSheet
       placement="right"
@@ -118,6 +126,7 @@ const useGPTSheet = () => {
       style={{ maxWidth: "100%" }}
     >
       <div
+        ref={messageArea}
         style={{
           flex: 1,
           borderRadius: 8,
@@ -129,7 +138,7 @@ const useGPTSheet = () => {
           flexDirection: "column",
         }}
       >
-        {messages.length == 0 && (
+        {!msgWaitForReply && messages.length == 0 && (
           <Empty
             style={{
               justifyContent: "center",
@@ -141,6 +150,7 @@ const useGPTSheet = () => {
             description="Try ask: Have I enrolled in COMP3278?"
           />
         )}
+
         {messages
           .filter((v) => v.role != "tool")
           .map((msg, idx) =>
@@ -150,6 +160,7 @@ const useGPTSheet = () => {
               <AssistantMessage msg={msg} key={idx} />
             )
           )}
+
         {msgWaitForReply && (
           <UserMessage msg={{ role: "user", content: msgWaitForReply }} />
         )}
