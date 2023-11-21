@@ -1,4 +1,5 @@
 import useMessageSheet from "@/components/useMessageSheet";
+import { useUser } from "@/contexts/user";
 import MainService from "@/service";
 import { extractData } from "@/utils/extractData";
 import {
@@ -15,11 +16,22 @@ import {
 } from "@douyinfe/semi-ui";
 import { usePagination } from "ahooks";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const MessagesPage = () => {
   const [msgFilter, setMsgFilter] = useState<"all" | "unread">("all");
+  const { enrolments } = useUser();
+  const courseFilters = useMemo(
+    () =>
+      enrolments.map((e) => ({
+        text: e.course.code,
+        value: e.course_id,
+      })),
+    [enrolments]
+  );
+
+  const [courseIdFilter, setCourseIdFilter] = useState<number>();
   const {
     data: messages,
     loading,
@@ -31,10 +43,11 @@ const MessagesPage = () => {
           page: current,
           page_size: pageSize,
           unread: msgFilter == "unread",
+          course_id: courseIdFilter,
         })
       ),
     {
-      refreshDeps: [msgFilter],
+      refreshDeps: [msgFilter, courseIdFilter],
     }
   );
   const navigate = useNavigate();
@@ -68,6 +81,14 @@ const MessagesPage = () => {
                 pagination.onChange(currentPage, pageSize);
               },
             }}
+            onChange={({ filters = [] }) => {
+              filters = filters.filter((f) => f.dataIndex == "course_id");
+              if (filters.length == 0) {
+                setCourseIdFilter(undefined);
+              } else {
+                setCourseIdFilter(filters[0].filteredValue?.[0]);
+              }
+            }}
             columns={[
               {
                 dataIndex: "title",
@@ -83,7 +104,7 @@ const MessagesPage = () => {
                 ),
               },
               {
-                dataIndex: "course",
+                dataIndex: "course_id",
                 title: "Course",
                 render: (_, record) => (
                   <Typography.Text
@@ -94,6 +115,8 @@ const MessagesPage = () => {
                   </Typography.Text>
                 ),
                 width: 100,
+                filters: courseFilters,
+                filterMultiple: false,
               },
               {
                 dataIndex: "created_at",
@@ -103,6 +126,7 @@ const MessagesPage = () => {
                     {dayjs(t).format("YYYY-MM-DD HH:mm:ss Z")}
                   </span>
                 ),
+                width: 250,
               },
 
               {
@@ -113,6 +137,7 @@ const MessagesPage = () => {
                     {dayjs(t).format("YYYY-MM-DD HH:mm:ss Z")}
                   </span>
                 ),
+                width: 250,
               },
             ]}
             empty={

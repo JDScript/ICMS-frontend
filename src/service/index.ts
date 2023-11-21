@@ -62,7 +62,7 @@ class MainService {
   };
 
   static getMyMessages = async (
-    params: API.PaginationParams & { unread?: boolean }
+    params: API.PaginationParams & { unread?: boolean; course_id?: number }
   ): Promise<API.BaseResponse<API.BasePagination<API.CourseMessage>>> => {
     return request("/me/messages", { params });
   };
