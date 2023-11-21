@@ -6,6 +6,7 @@ import {
   Layout,
   List,
   Row,
+  Spin,
   Typography,
 } from "@douyinfe/semi-ui";
 import dayjs from "dayjs";
@@ -16,7 +17,7 @@ import useGPTSheet from "./components/useGPTSheet";
 import UpcomingSession from "./components/UpcomingSession";
 
 const DashboardPage = () => {
-  const { user, enrolments } = useUser();
+  const { user, enrolments, enrolmentsLoading } = useUser();
   const { gptSheet, open: openGPTSheet } = useGPTSheet();
 
   return (
@@ -40,7 +41,9 @@ const DashboardPage = () => {
           >
             Ask ICMS GPT for help!
           </Button>
-          <UpcomingSession />
+          <Spin spinning={enrolmentsLoading}>
+            <UpcomingSession />
+          </Spin>
           <Card
             title="My Enrolments"
             style={{ marginBlock: 16 }}

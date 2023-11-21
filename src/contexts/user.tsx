@@ -10,6 +10,7 @@ interface IUserContext {
   logout: () => {};
   enrolments: API.Enrolment[];
   enrolledInCourse: (courseId: number) => boolean;
+  enrolmentsLoading: boolean;
   refreshEnrolments: () => void;
   unreadMessages: API.BasePagination<API.CourseMessage>;
   unreadMessagesLoading: boolean;
@@ -42,13 +43,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     refreshDeps: [token],
   });
 
-  const { data: enrolments, refresh: refreshEnrolments } = useRequest(
-    MainService.getEnrolments,
-    {
-      ready: !!user,
-      refreshDeps: [user],
-    }
-  );
+  const {
+    data: enrolments,
+    refresh: refreshEnrolments,
+    loading: enrolmentsLoading,
+  } = useRequest(MainService.getEnrolments, {
+    ready: !!user,
+    refreshDeps: [user],
+  });
 
   const {
     data: unreadMessages,
@@ -109,6 +111,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         },
         enrolments: enrolments?.data ?? [],
         enrolledInCourse: enrolledInCourse,
+        enrolmentsLoading: enrolmentsLoading,
         refreshEnrolments: refreshEnrolments,
         unreadMessages: unreadMessages?.data ?? { list: [], total: 0 },
         unreadMessagesLoading: unreadMessagesLoading,
