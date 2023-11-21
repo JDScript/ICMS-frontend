@@ -1,5 +1,6 @@
 import { useUser } from "@/contexts/user";
-import { SideSheet, Typography } from "@douyinfe/semi-ui";
+import { Descriptions, SideSheet, Typography } from "@douyinfe/semi-ui";
+import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
 const useMessageSheet = () => {
@@ -15,7 +16,29 @@ const useMessageSheet = () => {
       height={"calc(100% - 60px)"}
       zIndex={1100}
     >
-      <Typography.Paragraph>
+      <Descriptions
+        row
+        size="small"
+        data={[
+          {
+            key: "Course",
+            value: `${sheetContent?.course?.code} - ${sheetContent?.course?.title} [Section, ${sheetContent?.course?.section}, ${sheetContent?.course?.year}]`,
+          },
+          {
+            key: "Published at",
+            value: dayjs
+              .tz(sheetContent?.created_at)
+              .format("YYYY-MM-DD HH:mm:ss Z"),
+          },
+          {
+            key: "Updated at",
+            value: dayjs
+              .tz(sheetContent?.updated_at)
+              .format("YYYY-MM-DD HH:mm:ss Z"),
+          },
+        ]}
+      />
+      <Typography.Paragraph style={{ marginBlock: 12 }}>
         <span
           dangerouslySetInnerHTML={{ __html: sheetContent?.content ?? "" }}
         />

@@ -18,6 +18,7 @@ import { usePagination } from "ahooks";
 import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useUrlState from "@ahooksjs/use-url-state";
 
 const MessagesPage = () => {
   const [msgFilter, setMsgFilter] = useState<"all" | "unread">("all");
@@ -31,7 +32,10 @@ const MessagesPage = () => {
     [enrolments]
   );
 
-  const [courseIdFilter, setCourseIdFilter] = useState<number>();
+  const [{ course_id: courseIdFilter }, setCourseIdFilter] = useUrlState<{
+    course_id?: number;
+  }>({ course_id: undefined });
+
   const {
     data: messages,
     loading,
@@ -84,9 +88,9 @@ const MessagesPage = () => {
             onChange={({ filters = [] }) => {
               filters = filters.filter((f) => f.dataIndex == "course_id");
               if (filters.length == 0) {
-                setCourseIdFilter(undefined);
+                setCourseIdFilter({ course_id: undefined });
               } else {
-                setCourseIdFilter(filters[0].filteredValue?.[0]);
+                setCourseIdFilter({ course_id: filters[0].filteredValue?.[0] });
               }
             }}
             columns={[
@@ -117,6 +121,9 @@ const MessagesPage = () => {
                 width: 100,
                 filters: courseFilters,
                 filterMultiple: false,
+                filteredValue: courseIdFilter
+                  ? [Number(courseIdFilter)]
+                  : undefined,
               },
               {
                 dataIndex: "created_at",

@@ -17,6 +17,7 @@
     "electron:build": "tsc && vite build --mode electron && electron-builder --config electron.config.json"
   },
   "dependencies": {
+    "@ahooksjs/use-url-state": "^3.5.1",
     "@douyinfe/semi-icons": "^2.46.1",
     "@douyinfe/semi-illustrations": "^2.46.1",
     "@douyinfe/semi-ui": "^2.46.1",

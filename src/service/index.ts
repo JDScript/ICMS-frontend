@@ -83,6 +83,13 @@ class MainService {
     return request(`/courses/${course_id}/sections`);
   };
 
+  static getCourseMessages = async (
+    course_id: number,
+    params: API.PaginationParams
+  ): Promise<API.BaseResponse<API.BasePagination<API.CourseMessage>>> => {
+    return request(`/courses/${course_id}/messages`, { params });
+  };
+
   static readMessages = async (data: {
     messages_id: number[];
   }): Promise<null> => {
