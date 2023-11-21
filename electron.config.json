@@ -34,5 +34,13 @@
     },
     "entitlements": "./entitlements.mac.plist",
     "entitlementsInherit": "./entitlements.mac.plist"
+  },
+  "win": {
+    "target": [
+      {
+        "target": "nsis",
+        "arch": ["x64"]
+      }
+    ]
   }
 }
