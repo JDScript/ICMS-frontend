@@ -33,7 +33,13 @@
       "com.apple.security.cs.allow-unsigned-executable-memory": true
     },
     "entitlements": "./entitlements.mac.plist",
-    "entitlementsInherit": "./entitlements.mac.plist"
+    "entitlementsInherit": "./entitlements.mac.plist",
+    "target": [
+      {
+        "target": "mas",
+        "arch": ["universal"]
+      }
+    ]
   },
   "win": {
     "target": [
