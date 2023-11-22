@@ -98,6 +98,12 @@ class MainService {
       data,
     });
   };
+
+  static sendCourseEmail = async (course_id: number): Promise<null> => {
+    return request(`/courses/${course_id}/emails`, {
+      method: "post",
+    });
+  };
 }
 
 export * from "./gpt";

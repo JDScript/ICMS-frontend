@@ -1,7 +1,14 @@
 import { useUser } from "@/contexts/user";
+import MainService from "@/service";
 import { IconMail } from "@douyinfe/semi-icons";
-import { Button, Descriptions, Space, Typography } from "@douyinfe/semi-ui";
-import { useCountDown } from "ahooks";
+import {
+  Button,
+  Descriptions,
+  Space,
+  Toast,
+  Typography,
+} from "@douyinfe/semi-ui";
+import { useCountDown, useRequest } from "ahooks";
 import { FormattedRes } from "ahooks/lib/useCountDown";
 import dayjs, { Dayjs } from "dayjs";
 import { useEffect, useMemo, useState } from "react";
@@ -106,6 +113,17 @@ const UpcomingSession = () => {
       .padStart(2, "0")}:${res.seconds.toString().padStart(2, "0")}`;
   };
 
+  const { run: sendEmail, loading: sendingEmail } = useRequest(
+    async () =>
+      await MainService.sendCourseEmail(nextOrCurrentSession.course_id),
+    {
+      manual: true,
+      onSuccess: () => {
+        Toast.success({ content: "Email sent successfully" });
+      },
+    }
+  );
+
   if (nextOrCurrentSession.start == null) {
     return (
       <div
@@ -194,7 +212,14 @@ const UpcomingSession = () => {
         >
           Enter course
         </Button>
-        <Button theme="borderless" icon={<IconMail />}>
+        <Button
+          theme="borderless"
+          icon={<IconMail />}
+          onClick={() => {
+            sendEmail();
+          }}
+          loading={sendingEmail}
+        >
           Send by email
         </Button>
       </Space>

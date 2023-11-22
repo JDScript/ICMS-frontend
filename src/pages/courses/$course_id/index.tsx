@@ -21,6 +21,7 @@ import {
   Layout,
   Row,
   Space,
+  Toast,
   Typography,
 } from "@douyinfe/semi-ui";
 import { useRequest } from "ahooks";
@@ -41,6 +42,16 @@ const CourseDetailPage = () => {
     return { course, sections };
   });
   const navigate = useNavigate();
+
+  const { run: sendEmail, loading: sendingEmail } = useRequest(
+    async () => await MainService.sendCourseEmail(data?.course.id ?? 0),
+    {
+      manual: true,
+      onSuccess: () => {
+        Toast.success({ content: "Email sent successfully" });
+      },
+    }
+  );
 
   if (error) {
     return (
@@ -118,7 +129,12 @@ const CourseDetailPage = () => {
                   >
                     Zoom link
                   </Button>
-                  <Button icon={<IconMail />} theme="borderless">
+                  <Button
+                    icon={<IconMail />}
+                    theme="borderless"
+                    onClick={sendEmail}
+                    loading={sendingEmail}
+                  >
                     Send by email
                   </Button>
                 </Space>
