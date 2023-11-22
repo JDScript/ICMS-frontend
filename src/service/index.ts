@@ -56,7 +56,7 @@ class MainService {
   };
 
   static getMyActivities = async (
-    params: API.PaginationParams
+    params: API.PaginationParams & { type?: string[]; method?: string[] }
   ): Promise<API.BaseResponse<API.BasePagination<API.Activity>>> => {
     return request("/me/activities", { params });
   };

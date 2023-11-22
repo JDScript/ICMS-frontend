@@ -1,6 +1,7 @@
 import { useUser } from "@/contexts/user";
 import MainService from "@/service";
 import { extractData } from "@/utils/extractData";
+import useUrlState from "@ahooksjs/use-url-state";
 import {
   Button,
   Descriptions,
@@ -22,19 +23,56 @@ const REQUEST_METHOD_MAP: { [key: string]: TagProps["color"] } = {
   DELETE: "red",
 };
 
+const ACTIVITIES_MAP = [
+  "register",
+  "login",
+  "get_my_profile",
+  "get_my_activities",
+  "clear_my_activities",
+  "get_my_enrolments",
+  "create_my_enrolment",
+  "get_my_messages",
+  "read_my_messages",
+  "search_all_courses",
+  "get_course_detail",
+  "send_course_detail",
+  "get_course_sections",
+  "get_course_messages",
+];
+
 const ActivitiesPage = () => {
   const { user } = useUser();
+
+  const [filter, setFilter] = useUrlState<{
+    method?: string[];
+    type?: string[];
+  }>({
+    method: undefined,
+    type: undefined,
+  });
+
   const { data, pagination, loading, refresh } = usePagination(
     async ({ current, pageSize }) => {
       return extractData(
         MainService.getMyActivities({
           page: current,
           page_size: pageSize,
+          type: filter.type
+            ? filter.type instanceof Array
+              ? filter.type
+              : [filter.type]
+            : undefined,
+          method: filter.method
+            ? filter.method instanceof Array
+              ? filter.method
+              : [filter.method]
+            : undefined,
         })
       );
     },
     {
       debounceWait: 500,
+      refreshDeps: [filter],
     }
   );
 
@@ -117,13 +155,51 @@ const ActivitiesPage = () => {
                 pagination.onChange(currentPage, pageSize);
               },
             }}
+            onChange={({ filters = [] }) => {
+              const newFilter: { [key: string]: string[] } = {};
+
+              for (const f of filters) {
+                if (f.dataIndex == "method" && f.filteredValue) {
+                  newFilter["method"] = f.filteredValue;
+                }
+
+                if (f.dataIndex == "type" && f.filteredValue) {
+                  newFilter["type"] = f.filteredValue;
+                }
+              }
+
+              setFilter(newFilter);
+            }}
             loading={loading}
             columns={[
               { dataIndex: "id", title: "ID", width: 100 },
-              { dataIndex: "type", title: "Type", width: 200 },
+              {
+                dataIndex: "type",
+                title: "Type",
+                filters: ACTIVITIES_MAP.map((a) => ({ text: a, value: a })),
+                width: 200,
+                filteredValue: filter.type
+                  ? filter.type instanceof Array
+                    ? filter.type
+                    : [filter.type]
+                  : undefined,
+              },
               {
                 dataIndex: "method",
                 title: "Method",
+                filters: ["GET", "POST", "PATCH", "PUT", "DELETE"].map(
+                  (method) => ({
+                    value: method.toLowerCase(),
+                    text: (
+                      <Tag color={REQUEST_METHOD_MAP[method]}>{method}</Tag>
+                    ),
+                  })
+                ),
+                filteredValue: filter.method
+                  ? filter.method instanceof Array
+                    ? filter.method
+                    : [filter.method]
+                  : undefined,
                 render: (_, act) => (
                   <Tag color={REQUEST_METHOD_MAP[act.method]}>{act.method}</Tag>
                 ),
