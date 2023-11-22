@@ -25,6 +25,10 @@ const useMessageSheet = () => {
             value: `${sheetContent?.course?.code} - ${sheetContent?.course?.title} [Section, ${sheetContent?.course?.section}, ${sheetContent?.course?.year}]`,
           },
           {
+            key: "Sent by",
+            value: sheetContent?.sender?.name,
+          },
+          {
             key: "Published at",
             value: dayjs
               .tz(sheetContent?.created_at)

@@ -106,6 +106,8 @@ declare namespace API {
     id: number;
     course_id: number;
     course?: API.Course;
+    sender_id: number;
+    sender?: API.User;
     title: string;
     content: string;
     read_at: null | number;

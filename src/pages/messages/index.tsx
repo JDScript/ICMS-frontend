@@ -108,6 +108,16 @@ const MessagesPage = () => {
                 ),
               },
               {
+                dataIndex: "sender.name",
+                title: "Sender",
+                render: (_, record) => (
+                  <Typography.Text ellipsis={{ showTooltip: true }}>
+                    {record.sender?.name}
+                  </Typography.Text>
+                ),
+                width: 150,
+              },
+              {
                 dataIndex: "course_id",
                 title: "Course",
                 render: (_, record) => (
