@@ -47,7 +47,7 @@ declare namespace API {
     year: number;
     section: string;
     title: string;
-    instructor: string;
+    teachers: User[];
     summary: string;
     zoom_link: string;
     slots: {

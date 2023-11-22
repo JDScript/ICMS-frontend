@@ -110,7 +110,7 @@ const CourseDetailPage = () => {
                 </Typography.Title>
                 <div>
                   <Typography.Paragraph>
-                    Instructor: {course.instructor}
+                    Teacher: {course.teachers.map((u) => u.name).join(", ")}
                   </Typography.Paragraph>
                   <Typography.Paragraph
                     style={{ color: "var(--semi-color-text-2)" }}
@@ -199,7 +199,7 @@ const CourseDetailPage = () => {
           ) : (
             <Empty
               title="Empty"
-              description="Still waiting for instructor to upload course materials!"
+              description="Still waiting for teachers to upload course materials!"
               image={<IllustrationConstruction />}
               darkModeImage={<IllustrationConstructionDark />}
               style={{ marginBlock: 24 }}

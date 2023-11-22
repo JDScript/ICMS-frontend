@@ -36,7 +36,7 @@ const CourseListItem = ({
             {course.summary ? course.summary : "No summary provided"}
           </Typography.Paragraph>
           <Typography.Paragraph>
-            Instructor: {course.instructor}
+            Teacher: {course.teachers.map((u) => u.name).join(", ")}
           </Typography.Paragraph>
           <Space>
             {showEnrol ? (
