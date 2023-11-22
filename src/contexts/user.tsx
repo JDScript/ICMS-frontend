@@ -50,6 +50,9 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   } = useRequest(MainService.getEnrolments, {
     ready: !!user,
     refreshDeps: [user],
+    onSuccess: () => {
+      refreshUnreadMessages();
+    },
   });
 
   const {
@@ -57,7 +60,7 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     refresh: refreshUnreadMessages,
     loading: unreadMessagesLoading,
   } = useRequest(
-    async () => await MainService.getMyMessages({ unread: true }),
+    async () => await MainService.getMyMessages({ unread: true, page_size: 5 }),
     {
       ready: !!user,
       refreshDeps: [user],
