@@ -278,6 +278,9 @@ const GlobalLayout = () => {
           <Typography.Text type="tertiary">
             ©️ 2023 ICMS, Intelligent Course Management System
           </Typography.Text>
+          <Typography.Paragraph type="quaternary" style={{ fontSize: 11 }}>
+            Made with love ❤️ to Shuwen
+          </Typography.Paragraph>
         </Space>
       </Layout.Footer>
       {sheet}
