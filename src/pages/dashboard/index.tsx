@@ -13,6 +13,7 @@ import CourseCalendar from "./components/CourseCalendar";
 import CourseListItem from "@/components/CourseListItem";
 import { IconCustomerSupport } from "@douyinfe/semi-icons";
 import useGPTSheet from "./components/useGPTSheet";
+import UpcomingSession from "./components/UpcomingSession";
 
 const DashboardPage = () => {
   const { user, enrolments } = useUser();
@@ -39,9 +40,7 @@ const DashboardPage = () => {
           >
             Ask ICMS GPT for help!
           </Button>
-          <Card title="Upcoming Session" style={{ marginBlock: 16 }}>
-            No upcoming session within 1 hour.
-          </Card>
+          <UpcomingSession />
           <Card
             title="My Enrolments"
             style={{ marginBlock: 16 }}
