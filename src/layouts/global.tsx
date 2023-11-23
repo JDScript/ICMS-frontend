@@ -1,7 +1,9 @@
 import Loading from "@/components/Loading";
+import useHostModal from "@/components/useHostModal";
 import useMessageSheet from "@/components/useMessageSheet";
 import { useUser } from "@/contexts/user";
 import {
+  IconExit,
   IconMail,
   IconMoon,
   IconRefresh,
@@ -28,6 +30,7 @@ import {
   Tooltip,
   Typography,
 } from "@douyinfe/semi-ui";
+import { useLocalStorageState } from "ahooks";
 import { Suspense, useEffect, useState } from "react";
 import { useOutlet, useNavigate } from "react-router-dom";
 
@@ -82,7 +85,21 @@ const GlobalLayout = () => {
       });
   }, []);
 
+  useEffect(() => {
+    document.addEventListener("keydown", (e) => {
+      if (e.ctrlKey && e.altKey && e.code === "KeyD") {
+        openHostModal();
+      }
+    });
+  }, []);
+
   const { sheet, openMsg } = useMessageSheet();
+  const [host] = useLocalStorageState<string>("host", {
+    serializer: (v) => v,
+    deserializer: (v) => v,
+  });
+
+  const { openHostModal, hostModal } = useHostModal();
 
   return (
     <Layout style={{ minHeight: "100%" }}>
@@ -126,6 +143,25 @@ const GlobalLayout = () => {
                   onClick={switchMode}
                 />
               </Tooltip>
+              {host && (
+                <Tooltip
+                  trigger="hover"
+                  content={"Exit dev mode"}
+                  position="bottom"
+                >
+                  <Button
+                    theme="borderless"
+                    icon={<IconExit />}
+                    style={{
+                      color: "var(--semi-color-text-2)",
+                    }}
+                    onClick={() => {
+                      localStorage.removeItem("host");
+                      window.location.reload();
+                    }}
+                  />
+                </Tooltip>
+              )}
               {token && (
                 <Popover
                   trigger="click"
@@ -284,6 +320,7 @@ const GlobalLayout = () => {
         </Space>
       </Layout.Footer>
       {sheet}
+      {hostModal}
     </Layout>
   );
 };

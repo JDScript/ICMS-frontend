@@ -6,7 +6,7 @@ import axios, {
 } from "axios";
 
 const request = axios.create({
-  baseURL: "https://icms.jdscript.dev/v1",
+  baseURL: localStorage.getItem("host") ?? "https://icms.jdscript.dev/v1",
   responseType: "json",
   responseEncoding: "utf-8",
   timeout: 100000,
@@ -45,6 +45,7 @@ const formatError = async (err: AxiosError) => {
     "message" in response.data &&
     typeof response.data.message === "string"
   ) {
+    err.name = `${response.status} ${response.statusText}`;
     err.message = response.data.message;
   }
 
